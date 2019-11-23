@@ -46,8 +46,21 @@ class Daili(object):
             l.append(i.find_all('td')[0].text)
         return l
            
-    def main(self):
-        print(self.analyze("http://www.xiladaili.com/https/2/"))
+    def test(self,proxy):
+        #proxy暂时默认为 ip:port
+	    proxies = {"http": proxy,"https": proxy,}
+	    r = requests.get("https://ysgfhpx.cn/myip", proxies=proxies,timeout=5)
+	    if r.text == proxy.split(":")[0]:
+	        return "True :"+proxy
+	    else:
+	        return "False:"+proxy
         
+    def main(self):
+        l = self.analyze("http://www.xiladaili.com/https/2/")
+        for i in l:
+            try:
+                print(self.test(i))
+            except:
+                pass
 daili = Daili()
 daili.main()
