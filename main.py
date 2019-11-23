@@ -1,6 +1,7 @@
 import random
 import os
 import requests
+from bs4 import BeautifulSoup as bs
 
 class Daili(object):
     def __init__(self):
@@ -34,11 +35,18 @@ class Daili(object):
             with open(fileName,'w') as f:
                 f.write(pageContent)
         return pageContent
+        
     def analyze(self,url):
-        pass
+        pageContent = self.caclePages(url)
+        soup = bs(pageContent,features="lxml")
+        result = soup.tbody.find_all('tr')
+        l=[]
+        for i in result:
+            l.append(i.find_all('td')[0].text)
+        return l
            
     def main(self):
-        print(self.caclePages("http://www.xiladaili.com/https/2/"))
+        print(self.analyze("http://www.xiladaili.com/https/2/"))
         
 daili = Daili()
 daili.main()
