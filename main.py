@@ -26,6 +26,7 @@ class Daili(object):
             fileName = l[-1]
         #如果url末尾是/，则切割结果为空
         #目前暂不考虑多网站多个目录情况，使用末尾字符串作为文件名
+        fileName = fileName+".html"
         if os.path.exists(fileName):
             with open(fileName,'r') as f:
                 pageContent = f.read()
