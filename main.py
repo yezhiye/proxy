@@ -1,6 +1,7 @@
 import random
 import os
 import time
+import logging
 import requests
 from bs4 import BeautifulSoup as bs
 
@@ -13,7 +14,8 @@ class Daili(object):
         for i in os.listdir():
             if i.endswith('.html'):
                 os.remove(i)
-
+        #定制logging格式
+        logging.basicConfig(filename='daili.log', filemode='a' , level=logging.DEBUG, format="%(asctime)s;%(levelname)s;%(message)s")
     def getUA(self):
         # 随机从一堆ua中返回一个
         ua = [
@@ -60,6 +62,7 @@ class Daili(object):
         pageContent = self.caclePages(url)
         soup = bs(pageContent, features="lxml")
         result = soup.tbody.find_all('tr')
+        logging.debug("debug url:%s ; proxy: %d"%(url, len(result)))
         l = []
         for i in result:
             l.append(i.find_all('td')[0].text)
@@ -67,9 +70,10 @@ class Daili(object):
 
     def test(self, proxy , testUrl):
         # proxy暂时默认为 ip:port
-        print("Testing:"+proxy)
+        logging.info("info Testing:"+proxy)
         proxies = {"http": proxy, "https": proxy, }
         r = requests.get("https://ysgfhpx.cn/myip", proxies=proxies, timeout=5)
+        logging.debug("debug proxy:%s ; text:%s ;result:%s"%(proxy,r.text,r.text == proxy.split(":")[0]))
         if r.text == proxy.split(":")[0]:
             #proxy ip 与 网页实测相同，表示可信
             headers = {'user-agent': self.getUA()}
@@ -79,12 +83,13 @@ class Daili(object):
             return False
 
     def main(self):
+        logging.info("info Spider start")
         testUrl = input("Today Url : ")
         # testUrl 是 墨墨背单词 当日分享url
-        click = (0,50)
+        click = (0, 50)
         #页面需要有效点击20次以上，保守写成50
         for k in range(2, 12):
-            if click[0]>= click[1]:
+            if click[0] >= click[1]:
                 break
             #点击任务完成
             l = self.analyze("http://www.xiladaili.com/https/%d/" % k)
@@ -92,9 +97,9 @@ class Daili(object):
                 try:
                     if self.test(i, testUrl) == True:
                         click[0] += 1
-                        print(time.ctime+":"+click[0])
+                        logging.info("info Count:"+click[0])
                     else:
-                        print("False")
+                        logging.info("info False")
                     if click[0] >= click[1]:
                         break
                     # 点击任务完成
