@@ -93,6 +93,8 @@ class Daili(object):
                     if self.test(i, testUrl) == True:
                         click[0] += 1
                         print(time.ctime+":"+click[0])
+                    else:
+                        print("False")
                     if click[0] >= click[1]:
                         break
                     # 点击任务完成
