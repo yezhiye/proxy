@@ -86,7 +86,7 @@ class Daili(object):
         logging.info("info Spider start")
         testUrl = input("Today Url : ")
         # testUrl 是 墨墨背单词 当日分享url
-        click = (0, 50)
+        click = [0, 50]
         #页面需要有效点击20次以上，保守写成50
         for k in range(2, 12):
             if click[0] >= click[1]:
